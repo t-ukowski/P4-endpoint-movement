@@ -60,8 +60,8 @@ def handleBounceEntry(p4info_helper, host, new_switch_name, old_switch_name, swi
                 },
                 action_name="MyIngress.ipv4_forward",
                 action_params={
-                    "dstAddr": switch_mac_table[new_switch_name],
-                    "port": switch_ports[old_switch_name][new_switch_name]
+                    # TODO - to fields "dstAddr" and "port" assign proper
+                    # elements form switch_mac_table and switch_ports"
                 })
             switch.WriteTableEntry(table_entry)
             print("Installed bounce entry for host {} on switch {}".format(host, old_switch_name))
@@ -88,7 +88,8 @@ def monitorHostLocation(switch, added_entries_shared, removed_entries_shared):
             removed_entries = [entry for entry in expected_table_entries if not entry in current_table_entries]
             for entry in added_entries:
                 ip_in_bytes = get_ipv4_dst_address(entry)
-                ip_in_dotted_decimal = socket.inet_ntoa(ip_in_bytes)
+                # TODO - convert ip_in_bytes to dotted-decimal notation
+                # TODO - put new switch name to added_entries_shared under proper index
                 print('A new entry has been added on switch {}. IP: {}'.format(switch.name, ip_in_dotted_decimal))
 
                 added_entries_shared[ip_in_dotted_decimal] = switch.name
@@ -96,7 +97,8 @@ def monitorHostLocation(switch, added_entries_shared, removed_entries_shared):
             if len(added_entries) == 0:
                 for entry in removed_entries:
                     ip_in_bytes = get_ipv4_dst_address(entry)
-                    ip_in_dotted_decimal = socket.inet_ntoa(ip_in_bytes)
+                    # TODO - convert ip_in_bytes to dotted-decimal notation
+                    # TODO - put new switch name to removed_entries_shared under proper index
                     print('An entry has been removed from switch {}. IP: {}'.format(switch.name, ip_in_dotted_decimal))
 
                     removed_entries_shared[ip_in_dotted_decimal] = switch.name
@@ -123,9 +125,8 @@ def checkForMigration(p4info_helper, added_entries_shared, removed_entries_share
                 old_sw_name = removed_entries_shared[host]
                 added_entries_shared.pop(host)
                 removed_entries_shared.pop(host)
-                # Start a new thread to handle bounce entry creation and removal
-                bounce_entry_thread = threading.Thread(target=handleBounceEntry, args=(p4info_helper, host, new_sw_name, old_sw_name, switches))
-                bounce_entry_thread.start()
+                
+                # TODO - Start a new thread to handle bounce entry creation and removal
 
         time.sleep(1)  # pause for a reasonable duration```
 
@@ -267,4 +268,3 @@ if __name__ == '__main__':
         print("\nBMv2 JSON file not found: %s\nHave you run 'make'?" % args.bmv2_json)
         parser.exit(1)
     main(args.p4info, args.bmv2_json)
-
