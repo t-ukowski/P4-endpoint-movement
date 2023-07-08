@@ -7,3 +7,4 @@ Demonstracja możliwości wykorzystania switchy P4 w dynamicznej relokacji host�
 Celem jest przygotowanie ćwiczenia laboratoryjnego pokazującego, w jaki sposób można wykorzystać
 switche P4 do sprawnej obsługi migrującej końcówki (wzór: instalacja tras i "bounce entries" przez
 COOP w ACI).
+
