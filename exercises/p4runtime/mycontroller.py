@@ -67,7 +67,6 @@ def handleBounceEntry(p4info_helper, host, new_switch_name, old_switch_name, swi
             print("Installed bounce entry for host {} on switch {}".format(host, old_switch_name))
             break
 
-
 def monitorHostLocation(switch, added_entries_shared, removed_entries_shared):
 
     """
@@ -122,11 +121,11 @@ def checkForMigration(p4info_helper, added_entries_shared, removed_entries_share
                 # Remove the entries from the shared dicts to avoid repeat notifications
                 new_sw_name = added_entries_shared[host]
                 old_sw_name = removed_entries_shared[host]
+                added_entries_shared.pop(host)
                 removed_entries_shared.pop(host)
                 # Start a new thread to handle bounce entry creation and removal
                 bounce_entry_thread = threading.Thread(target=handleBounceEntry, args=(p4info_helper, host, new_sw_name, old_sw_name, switches))
                 bounce_entry_thread.start()
-            added_entries_shared.pop(host)
 
         time.sleep(1)  # pause for a reasonable duration```
 
@@ -235,6 +234,7 @@ def main(p4info_file_path, bmv2_file_path):
         sleep(5)
         removeHostFromSwitch(s2, "10.0.2.2")
         addHostOnSwitch(p4info_helper, s1, "10.0.2.2", "08:00:00:00:02:22")
+        sleep(5)
 
     except KeyboardInterrupt:
         print(" Shutting down.")
